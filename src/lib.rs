@@ -11,5 +11,6 @@ pub mod connector;
 pub mod server;
 pub mod util;
 
+pub use self::address::Address;
 pub use self::connector::Connector;
 pub use self::error::ProxyError;
