@@ -3,6 +3,12 @@ name = "proxies"
 version = "0.1.0"
 authors = ["Jiong Du <jiongdu0.0@gmail.com>"]
 edition = "2018"
+license = "MIT"
+homepage = "https://github.com/rustlib/proxies"
+documentation = "http/socks5 proxy"
+repository = "https://github.com/rustlib/proxies"
+readme = "README.md"
+keywords = ["proxy", "socks5"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
