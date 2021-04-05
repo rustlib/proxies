@@ -9,6 +9,15 @@ pub enum Address {
     Sock(SocketAddr),
 }
 
+impl Address {
+    pub fn port(&self) -> u16 {
+        match self {
+            Self::Domain(_, port) => *port,
+            Self::Sock(addr) => addr.port(),
+        }
+    }
+}
+
 impl From<(String, u16)> for Address {
     fn from(addr: (String, u16)) -> Self {
         Self::Domain(addr.0, addr.1)
