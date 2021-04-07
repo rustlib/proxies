@@ -46,11 +46,13 @@ impl HttpHandle {
         if !buffer.is_empty() {
             remote.write_all(&Bytes::copy_from_slice(buffer)).await?;
         }
-        let _ = DuplexCopy::new(
+        let _ = DuplexCopy::with_pending(
             format!("local(to {})", request.addr),
             io.into_inner(),
+            false,
             format!("remote({})", request.addr),
             remote,
+            true,
         )
         .await?;
         Ok(())

@@ -16,18 +16,26 @@ pin_project! {
         #[pin]
         writer: D,
         writer_done: bool,
+        flush_on_pending: bool,
         amt: usize,
     }
 }
 
 impl<S, D> Copy<S, D> {
-    fn new(reader_label: String, reader: S, writer_label: String, writer: D) -> Copy<S, D> {
+    fn new(
+        reader_label: String,
+        reader: S,
+        writer_label: String,
+        writer: D,
+        flush_on_pending: bool,
+    ) -> Copy<S, D> {
         Copy {
             reader_label,
             writer_label,
-            reader: reader,
+            reader,
             writer,
             writer_done: false,
+            flush_on_pending,
             amt: 0,
         }
     }
@@ -48,7 +56,7 @@ where
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let mut this = self.project();
-        let mut write_flush = false;
+        let mut write_flush = *this.flush_on_pending;
 
         loop {
             let buffer = match this.reader.as_mut().poll_fill_buf(cx) {
@@ -60,6 +68,7 @@ where
                         if let Err(e) = ready!(this.writer.as_mut().poll_flush(cx)) {
                             bail_other_err!("flush {} fail: {}", this.writer_label, e);
                         }
+                        *this.flush_on_pending = false;
                     }
                     return Poll::Pending;
                 }
@@ -113,11 +122,26 @@ where
     L: AsyncRead + AsyncWrite,
     R: AsyncRead + AsyncWrite,
 {
-    pub fn new<A: ToString, B: ToString>(
+    pub fn new(left: L, right: R) -> DuplexCopy<L, R> {
+        Self::with_pending("left", left, false, "right", right, false)
+    }
+
+    pub fn with_label<A: ToString, B: ToString>(
         left_label: A,
         left: L,
         right_label: B,
         right: R,
+    ) -> DuplexCopy<L, R> {
+        Self::with_pending(left_label, left, false, right_label, right, false)
+    }
+
+    pub fn with_pending<A: ToString, B: ToString>(
+        left_label: A,
+        left: L,
+        left_flush_pending: bool,
+        right_label: B,
+        right: R,
+        right_flush_pending: bool,
     ) -> DuplexCopy<L, R> {
         let (left_label, right_label) = (left_label.to_string(), right_label.to_string());
         let (left_r, left_w) = split(left);
@@ -129,11 +153,18 @@ where
                 BufReader::new(left_r),
                 right_label.clone(),
                 right_w,
+                right_flush_pending,
             ),
             left_done: false,
             left_amt: 0,
 
-            right: Copy::new(right_label, BufReader::new(right_r), left_label, left_w),
+            right: Copy::new(
+                right_label,
+                BufReader::new(right_r),
+                left_label,
+                left_w,
+                left_flush_pending,
+            ),
             right_done: false,
             right_amt: 0,
         }
