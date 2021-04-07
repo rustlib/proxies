@@ -80,9 +80,9 @@ impl<'de> Visitor<'de> for AddressVisitor {
         if let Ok(addr) = v.parse() {
             Ok(Address::Sock(addr))
         } else {
-            let mut parts = v.rsplitn(1, ':');
-            let host = parts.next().unwrap();
-            if let Some(port) = parts.next() {
+            let mut parts = v.rsplitn(2, ':');
+            let port = parts.next().unwrap();
+            if let Some(host) = parts.next() {
                 let port = port
                     .parse()
                     .map_err(|_| serde::de::Error::custom(format!("invalid port: {}", port)))?;
