@@ -1,4 +1,4 @@
-use std::{fmt, io::Error, net::SocketAddr};
+use std::{fmt, io::Error, net::SocketAddr, str::FromStr};
 
 use serde::{de::Visitor, Deserialize, Serialize};
 use tokio::net::TcpStream;
@@ -55,6 +55,36 @@ impl fmt::Display for Address {
     }
 }
 
+#[derive(Debug)]
+pub struct InvalidAddress;
+
+impl std::fmt::Display for InvalidAddress {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "invalid address")
+    }
+}
+
+impl std::error::Error for InvalidAddress {}
+
+impl FromStr for Address {
+    type Err = InvalidAddress;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if let Ok(addr) = s.parse() {
+            Ok(Address::Sock(addr))
+        } else {
+            let mut parts = s.rsplitn(2, ':');
+            let port = parts.next().unwrap();
+            if let Some(host) = parts.next() {
+                let port = port.parse().map_err(|_| InvalidAddress)?;
+                Ok(Address::Domain(host.to_string(), port))
+            } else {
+                Err(InvalidAddress)
+            }
+        }
+    }
+}
+
 impl<'de> Deserialize<'de> for Address {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -77,20 +107,8 @@ impl<'de> Visitor<'de> for AddressVisitor {
     where
         E: serde::de::Error,
     {
-        if let Ok(addr) = v.parse() {
-            Ok(Address::Sock(addr))
-        } else {
-            let mut parts = v.rsplitn(2, ':');
-            let port = parts.next().unwrap();
-            if let Some(host) = parts.next() {
-                let port = port
-                    .parse()
-                    .map_err(|_| serde::de::Error::custom(format!("invalid port: {}", port)))?;
-                Ok(Address::Domain(host.to_string(), port))
-            } else {
-                Err(serde::de::Error::custom(format!("invalid address: {}", v)))
-            }
-        }
+        v.parse()
+            .map_err(|_| serde::de::Error::custom(format!("invalid address: {}", v)))
     }
 }
 
