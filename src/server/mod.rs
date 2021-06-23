@@ -64,7 +64,7 @@ where
                 Ok((sock, addr)) => {
                     let client_handle = self.client_handle.clone();
                     tokio::spawn(async move {
-                        if let Err(e) = client_handle.clone().handle(sock, addr).await {
+                        if let Err(e) = client_handle.handle(sock, addr).await {
                             warn!("handle {} fail: {}", addr, e);
                         }
                     });
