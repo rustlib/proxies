@@ -12,6 +12,12 @@ pub struct HttpHandle {
     //
 }
 
+impl Default for HttpHandle {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl HttpHandle {
     pub fn new() -> Self {
         HttpHandle {}

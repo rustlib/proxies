@@ -15,11 +15,11 @@ pub trait BufIoExt: AsyncBufRead + Sized {
         }
     }
 
-    fn try_read_byte<'a>(&'a mut self) -> TryReadByte<'a, Self> {
+    fn try_read_byte(&mut self) -> TryReadByte<'_, Self> {
         TryReadByte { bufio: self }
     }
 
-    fn try_peek_byte<'a>(&'a mut self) -> TryPeekByte<'a, Self> {
+    fn try_peek_byte(&mut self) -> TryPeekByte<'_, Self> {
         TryPeekByte { bufio: self }
     }
 }

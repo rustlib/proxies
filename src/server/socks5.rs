@@ -11,6 +11,12 @@ pub struct Socks5Handle {
     //
 }
 
+impl Default for Socks5Handle {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Socks5Handle {
     pub fn new() -> Self {
         Socks5Handle {}
