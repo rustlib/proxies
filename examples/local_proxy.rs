@@ -5,7 +5,7 @@ use proxies::server::ProxyServer;
 
 #[tokio::main]
 async fn main() {
-    env_logger::init();
+    tracing_subscriber::fmt::init();
     let server = ProxyServer::bind(DirectConnector, "127.0.0.1:9000")
         .await
         .expect("bind fail");
