@@ -75,7 +75,7 @@ struct Request<'a> {
 impl<'a> Request<'a> {
     fn parse(line: &'a Bytes) -> Result<Self, ProxyError> {
         let line =
-            std::str::from_utf8(&line).map_err(|_| format_err!("invalid HTTP data: {:?}", line))?;
+            std::str::from_utf8(line).map_err(|_| format_err!("invalid HTTP data: {:?}", line))?;
         let parts: Vec<&str> = line.split_whitespace().collect();
         if parts.len() != 3 {
             bail!("invalid http data: {:?}", line);
