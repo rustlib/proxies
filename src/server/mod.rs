@@ -42,6 +42,13 @@ impl<C> ProxyServer<C, TcpIncoming> {
             client_handle: Arc::new(ClientHandle::new(connector)),
         })
     }
+
+    pub fn from_listener(connector: C, listener: TcpListener) -> Self {
+        ProxyServer {
+            incoming: TcpIncoming { listener },
+            client_handle: Arc::new(ClientHandle::new(connector)),
+        }
+    }
 }
 
 impl<C, I, T> ProxyServer<C, I>
