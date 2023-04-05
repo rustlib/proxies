@@ -181,7 +181,7 @@ where
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         loop {
             if !self.left_done {
-                match Pin::new(&mut (*self).left).poll(cx) {
+                match Pin::new(&mut self.left).poll(cx) {
                     Poll::Ready(Ok(amt)) => {
                         self.left_amt = amt;
                         self.left_done = true;
@@ -194,7 +194,7 @@ where
                 }
             }
             if !self.right_done {
-                match Pin::new(&mut (*self).right).poll(cx) {
+                match Pin::new(&mut self.right).poll(cx) {
                     Poll::Ready(Ok(amt)) => {
                         self.right_amt = amt;
                         self.right_done = true;
