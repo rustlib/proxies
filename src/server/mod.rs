@@ -1,13 +1,11 @@
 mod http;
 mod socks5;
 
-use std::{
-    io::Error,
-    net::SocketAddr,
-    pin::Pin,
-    sync::Arc,
-    task::{Context, Poll},
-};
+use std::io::Error;
+use std::net::SocketAddr;
+use std::pin::Pin;
+use std::sync::Arc;
+use std::task::{Context, Poll};
 
 pub use http::HttpHandle;
 pub use socks5::Socks5Handle;

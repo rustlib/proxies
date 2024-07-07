@@ -1,12 +1,12 @@
-use crate::{
-    address::Address,
-    util::{BufIoExt, DuplexCopy},
-};
-use crate::{connector::Connector, ProxyError};
-use bytes::Bytes;
 use std::net::SocketAddr;
+
+use bytes::Bytes;
 use tokio::io::{AsyncRead, AsyncWrite, AsyncWriteExt, BufReader};
 use url::{Host, Url};
+
+use crate::address::Address;
+use crate::util::{BufIoExt, DuplexCopy};
+use crate::{connector::Connector, ProxyError};
 
 pub struct HttpHandle {
     //

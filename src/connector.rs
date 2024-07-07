@@ -2,10 +2,8 @@ use std::io::Error;
 use std::ops::Deref;
 
 use async_trait::async_trait;
-use tokio::{
-    io::{AsyncRead, AsyncWrite},
-    net::TcpStream,
-};
+use tokio::io::{AsyncRead, AsyncWrite};
+use tokio::net::TcpStream;
 
 use crate::address::Address;
 

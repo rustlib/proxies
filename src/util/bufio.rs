@@ -1,8 +1,9 @@
-use bytes::{BufMut, Bytes, BytesMut};
 use std::future::Future;
 use std::io::{Error, ErrorKind};
 use std::pin::Pin;
 use std::task::{Context, Poll};
+
+use bytes::{BufMut, Bytes, BytesMut};
 use tokio::io::AsyncBufRead;
 
 pub trait BufIoExt: AsyncBufRead + Sized {

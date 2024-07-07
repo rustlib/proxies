@@ -1,9 +1,11 @@
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
+
+use tokio::io::{AsyncBufRead, AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt, BufReader};
+
+use crate::address::Address;
 use crate::connector::Connector;
 use crate::error::ProxyError;
-use crate::util::DuplexCopy;
-use crate::{address::Address, util::BufIoExt};
-use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
-use tokio::io::{AsyncBufRead, AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt, BufReader};
+use crate::util::{BufIoExt, DuplexCopy};
 
 const SOCKVER: u8 = 0x05;
 

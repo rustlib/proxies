@@ -1,9 +1,10 @@
-use pin_project_lite::pin_project;
 use std::io::Error;
 use std::pin::Pin;
 use std::string::ToString;
 use std::task::{Context, Poll};
 use std::{future::Future, io::ErrorKind};
+
+use pin_project_lite::pin_project;
 use tokio::io::{split, AsyncBufRead, AsyncRead, AsyncWrite, BufReader, ReadHalf, WriteHalf};
 
 pin_project! {
