@@ -11,10 +11,8 @@ pub use http::HttpHandle;
 pub use socks5::Socks5Handle;
 
 use std::fmt::Debug;
-use tokio::{
-    io::{AsyncRead, AsyncWrite, BufReader},
-    net::{TcpListener, TcpStream, ToSocketAddrs},
-};
+use tokio::io::{AsyncRead, AsyncWrite, BufReader};
+use tokio::net::{TcpListener, TcpStream, ToSocketAddrs};
 use tokio_stream::{Stream, StreamExt};
 
 use crate::{connector::Connector, util::BufIoExt, ProxyError};
@@ -44,6 +42,15 @@ impl<C> ProxyServer<C, TcpIncoming> {
     pub fn from_listener(connector: C, listener: TcpListener) -> Self {
         ProxyServer {
             incoming: TcpIncoming { listener },
+            client_handle: Arc::new(ClientHandle::new(connector)),
+        }
+    }
+}
+
+impl<C, I> ProxyServer<C, I> {
+    pub fn from_incoming(connector: C, incoming: I) -> Self {
+        Self {
+            incoming,
             client_handle: Arc::new(ClientHandle::new(connector)),
         }
     }
@@ -132,7 +139,8 @@ impl Stream for TcpIncoming {
     type Item = Result<(TcpStream, SocketAddr), Error>;
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        let result = ready!(Pin::new(&mut self.listener).poll_accept(cx));
-        Poll::Ready(Some(result))
+        let (sock, addr) = ready!(Pin::new(&mut self.listener).poll_accept(cx))?;
+        sock.set_nodelay(true)?;
+        Poll::Ready(Some(Ok((sock, addr))))
     }
 }
