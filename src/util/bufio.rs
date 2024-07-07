@@ -93,22 +93,6 @@ fn end_of(data: &[u8], pat: &[u8]) -> Result<usize, usize> {
     Err(0)
 }
 
-#[cfg(test)]
-mod test {
-    use super::end_of;
-    #[test]
-    fn test_end_of() {
-        assert_eq!(end_of(b"123456", b"123"), Ok(3));
-        assert_eq!(end_of(b"123456", b"234"), Ok(4));
-        assert_eq!(end_of(b"123456", b"456"), Ok(6));
-
-        assert_eq!(end_of(b"123456", b"23a"), Err(0));
-        assert_eq!(end_of(b"123456", b"abc"), Err(0));
-        assert_eq!(end_of(b"123456", b"567"), Err(2));
-        assert_eq!(end_of(b"123456", b"67"), Err(1));
-    }
-}
-
 pub struct TryReadByte<'a, T> {
     bufio: &'a mut T,
 }
@@ -150,5 +134,21 @@ where
         } else {
             Poll::Ready(Ok(Some(buf[0])))
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::end_of;
+    #[test]
+    fn test_end_of() {
+        assert_eq!(end_of(b"123456", b"123"), Ok(3));
+        assert_eq!(end_of(b"123456", b"234"), Ok(4));
+        assert_eq!(end_of(b"123456", b"456"), Ok(6));
+
+        assert_eq!(end_of(b"123456", b"23a"), Err(0));
+        assert_eq!(end_of(b"123456", b"abc"), Err(0));
+        assert_eq!(end_of(b"123456", b"567"), Err(2));
+        assert_eq!(end_of(b"123456", b"67"), Err(1));
     }
 }
