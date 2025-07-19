@@ -2,7 +2,7 @@
 name = "proxies"
 version = "0.2.1"
 authors = ["Jiong Du <jiongdu0.0@gmail.com>"]
-edition = "2021"
+edition = "2024"
 license = "MIT"
 homepage = "https://github.com/rustlib/proxies"
 description = "http/socks5 proxy"
