@@ -14,7 +14,7 @@ keywords = ["proxy", "socks5"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-thiserror = "1.0"
+thiserror = "2.0"
 futures = "0.3"
 tokio = { version = "1.3", features = ["io-util", "net", "rt", "macros"] }
 tokio-stream = "0.1"
