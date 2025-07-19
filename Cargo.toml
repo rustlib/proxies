@@ -1,6 +1,6 @@
 [package]
 name = "proxies"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Jiong Du <jiongdu0.0@gmail.com>"]
 edition = "2024"
 license = "MIT"
