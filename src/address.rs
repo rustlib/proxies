@@ -52,8 +52,8 @@ impl From<SocketAddr> for Address {
 impl fmt::Display for Address {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Self::Domain(host, port) => write!(f, "{}:{}", host, port),
-            Self::Sock(addr) => write!(f, "{}", addr),
+            Self::Domain(host, port) => write!(f, "{host}:{port}"),
+            Self::Sock(addr) => write!(f, "{addr}"),
         }
     }
 }
@@ -111,7 +111,7 @@ impl<'de> Visitor<'de> for AddressVisitor {
         E: serde::de::Error,
     {
         v.parse()
-            .map_err(|_| serde::de::Error::custom(format!("invalid address: {}", v)))
+            .map_err(|_| serde::de::Error::custom(format!("invalid address: {v}")))
     }
 }
 
@@ -121,8 +121,8 @@ impl Serialize for Address {
         S: serde::Serializer,
     {
         match self {
-            Self::Domain(host, port) => serializer.serialize_str(&format!("{}:{}", host, port)),
-            Self::Sock(addr) => serializer.serialize_str(&format!("{}", addr)),
+            Self::Domain(host, port) => serializer.serialize_str(&format!("{host}:{port}")),
+            Self::Sock(addr) => serializer.serialize_str(&format!("{addr}")),
         }
     }
 }
