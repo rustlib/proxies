@@ -6,7 +6,7 @@ use url::{Host, Url};
 
 use crate::address::Address;
 use crate::util::{BufIoExt, DuplexCopy};
-use crate::{connector::Connector, ProxyError};
+use crate::{ProxyError, connector::Connector};
 
 pub struct HttpHandle {
     //

@@ -3,7 +3,7 @@ use std::io::Error;
 use std::net::SocketAddr;
 use std::str::FromStr;
 
-use serde::{de::Visitor, Deserialize, Serialize};
+use serde::{Deserialize, Serialize, de::Visitor};
 use tokio::net::TcpStream;
 
 /// proxy address

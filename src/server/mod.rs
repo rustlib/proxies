@@ -15,7 +15,7 @@ use tokio::io::{AsyncRead, AsyncWrite, BufReader};
 use tokio::net::{TcpListener, TcpStream, ToSocketAddrs};
 use tokio_stream::{Stream, StreamExt};
 
-use crate::{connector::Connector, util::BufIoExt, ProxyError};
+use crate::{ProxyError, connector::Connector, util::BufIoExt};
 
 pub struct ProxyServer<C, I = TcpIncoming> {
     incoming: I,

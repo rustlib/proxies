@@ -5,7 +5,7 @@ use std::task::{Context, Poll};
 use std::{future::Future, io::ErrorKind};
 
 use pin_project_lite::pin_project;
-use tokio::io::{split, AsyncBufRead, AsyncRead, AsyncWrite, BufReader, ReadHalf, WriteHalf};
+use tokio::io::{AsyncBufRead, AsyncRead, AsyncWrite, BufReader, ReadHalf, WriteHalf, split};
 
 pin_project! {
     struct Copy<S, D> {
