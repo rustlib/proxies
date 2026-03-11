@@ -69,6 +69,7 @@ where
                 this.buffer.put_slice(data);
                 let data_len = data.len();
                 Pin::new(&mut *this.bufio).consume(data_len);
+                cx.waker().wake_by_ref();
                 Poll::Pending
             }
         }
@@ -77,19 +78,17 @@ where
 
 fn end_of(data: &[u8], pat: &[u8]) -> Result<usize, usize> {
     // TODO: kmp
-    if pat.len() <= data.len() {
-        'outter: for i in 0..data.len() {
-            for (j, b) in pat.iter().enumerate() {
-                let idx = i + j;
-                if idx >= data.len() {
-                    return Err(j);
-                }
-                if data[idx] != *b {
-                    continue 'outter;
-                }
+    'outter: for i in 0..data.len() {
+        for (j, b) in pat.iter().enumerate() {
+            let idx = i + j;
+            if idx >= data.len() {
+                return Err(j);
             }
-            return Ok(i + pat.len());
+            if data[idx] != *b {
+                continue 'outter;
+            }
         }
+        return Ok(i + pat.len());
     }
     Err(0)
 }

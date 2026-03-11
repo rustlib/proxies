@@ -82,6 +82,9 @@ where
                 if let Err(e) = ready!(this.writer.as_mut().poll_flush(cx)) {
                     bail_other_err!("flush {} fail: {}", this.writer_label, e);
                 }
+                if let Err(e) = ready!(this.writer.as_mut().poll_shutdown(cx)) {
+                    bail_other_err!("shutdown {} fail: {}", this.writer_label, e);
+                }
                 return Poll::Ready(Ok(*this.amt));
             }
             if *this.writer_done {

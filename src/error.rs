@@ -12,7 +12,7 @@ pub enum ProxyError {
     InvalidData(String),
     #[error("protocol parse fail: {0}")]
     ProtocolFail(String),
-    #[error("conntect remote({0}) fail: {1}")]
+    #[error("connect remote({0}) fail: {1}")]
     ConnectRemoteFail(Address, String),
     #[error("{0}")]
     Other(String),
