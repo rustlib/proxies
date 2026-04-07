@@ -9,6 +9,7 @@ mod error;
 mod address;
 pub mod connector;
 pub mod server;
+pub mod transport;
 pub mod util;
 
 pub use self::address::Address;
